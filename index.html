@@ -9,32 +9,88 @@
     </head>
     <body>
 
-        <main class="container">
+        <main class="container" ng-app="CommentList" ng-controller="CommentsController">
             <section>
                 <img src="img/super-bass-o-matic-76.jpg" alt="product picture" class="product-picture">
                 <h1>The Super Bass-o-Matic '76</h1>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia cumque deserunt ullam repudiandae nisi corporis! Ipsum, ducimus commodi, itaque porro distinctio consequuntur! Autem doloremque numquam nemo ex nulla tempora quis! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde nihil doloribus excepturi quisquam error possimus veritatis facere, commodi cumque ab atque dolore ducimus obcaecati ipsa, impedit! Consequuntur, eligendi iure cumque!</p>
             </section>
-
-            <section>
+            <br/>
+            <section class="comment">
                 <h2>Add a Comment</h2>
-                <!--  
-                put a form here for entering a new comment
-                the user must select a rating, and enter a name, title, and comment body
-                before the comment can be saved to the server
-                for the rating selection, use the Angular Bootstrap Rating directive 
-                http://angular-ui.github.io/bootstrap/#/rating
-                their script file is included below
-                -->
+                <form ng-submit="addTask(newTask)">
+                    <div class="form-group">
+                        <label for="task-stars">Stars</label>
+                        <rating max="5"ng-model="newTask.stars">"</rating>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="task-title">Title</label>
+                        <input type="text" id="task-title" class="form-control"
+                               placeholder="title of comment" ng-model="newTask.title"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-name">Name</label>
+                        <input type="text" id="task-name" class="form-control"
+                               placeholder="Your Name" ng-model="newTask.name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-name">Comment</label>
+                        <input type="text" id="task-comment" class="form-control"
+                               placeholder="Your Comment" ng-model="newTask.comment"/>
+                    </div>
+                    
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" ng-disabled="inserting">Add Comment</button>
+                        <img src="img/ajax-spinner.gif" alt="loading animation" ng-if="inserting"/>
+                    </div>
+                </form>
             </section>
 
-            <section>
+            <section class="comment">
                 <h2>Comments</h2>
-                <!-- 
-                display existing comments here
-                each comment should also have UI allowing the user to vote up/down the comment
-                as well as delete it
-                 -->
+                <p>
+                    <button class="btn btn-primary" ng-click="refreshComment()">Refresh</button>
+                    <img src="img/ajax-spinner.gif" alt="loading animation" ng-if="loading || updating"/>
+                </p>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Stars</th>
+                        <th>Title</th>
+                        <th>Name</th>
+                        <th>Comment</th>
+                        <th>Vote</th>
+                        <th>Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="task in tasks">
+                        <td>
+                            <rating max="5" ng-model="task.stars" ng-change="updateTask(task)"
+                                    ng-class="{done: task.done}" readonly="task.done"></rating>
+
+                        </td>
+                        <td ng-class="{done: task.done}">{{task.title}}
+                        </td>
+                        <td ng-class="{done: task.done}">{{task.name}}
+                        </td>
+                        <td ng-class="{done: task.done}">{{task.comment}}
+                        </td>
+                        <td>
+                            {{task.votes || 0}}
+                            <span class="glyphicon glyphicon-thumbs-up" ng-click="incrementVotes(task, 1)"></span>
+                            <span class="glyphicon glyphicon-thumbs-down" ng-if="task.votes > 0" ng-click="incrementVotes(task, -1)"></span>
+
+                        </td>
+                        <td>
+                            <input type="checkbox" ng-model="task.done" ng-change="updateTask(task)"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table> 
             </section>
 
         </main>
