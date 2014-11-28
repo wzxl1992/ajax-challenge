@@ -38,9 +38,7 @@
                         <label for="task-name">Comment</label>
                         <input type="text" id="task-comment" class="form-control"
                                placeholder="Your Comment" ng-model="newTask.comment"/>
-                    </div>
-                    
-                    
+                    </div>          
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary" ng-disabled="inserting">Add Comment</button>
                         <img src="img/ajax-spinner.gif" alt="loading animation" ng-if="inserting"/>
@@ -66,8 +64,10 @@
                         <th>Delete</th>
                     </tr>
                     </thead>
+                    <p ng-if="!tasks || 0 == tasks.length">To be the first person to review this</p>
+
                     <tbody>
-                    <tr ng-repeat="task in tasks">
+                    <tr ng-repeat="task in tasks | orderBy : sortCol : reverse = true">
                         <td>
                             <rating max="5" ng-model="task.stars" ng-change="updateTask(task)"
                                     ng-class="{done: task.done}" readonly="task.done"></rating>
